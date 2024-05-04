@@ -1,0 +1,16 @@
+{
+  "capabilities": {
+    "appium:appName": "My Demo App",
+    "appium:bundleId": "com.saucelabs.mydemoapp.ios",
+    "appium:app": "/Users/username/repos/sample-mobile-testing/apps/My Demo App.app",
+    "appium:deviceName": "iPhone 13 mini",
+    "appium:noReset": "false",
+    "appium:automationName": "XCUITest",
+    "appium:platformVersion": "17.4",
+    "appium:platformName": "iOS",
+    "appium:connectHardwareKeyboard": true,
+    "port": 4723,
+    "hostname": "0.0.0.0",
+    "path": "/wd/hub"
+  }
+}

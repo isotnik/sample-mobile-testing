@@ -1,0 +1,15 @@
+{
+  "capabilities": {
+    "appium:app": "/Users/username/repos/sample-mobile-testing/apps/mda-2.0.1-22.apk",
+    "appium:deviceName": "Pixel_3a_API_34_extension_level_7_arm64-v8a",
+    "appium:appName": "My Demo App",
+    "appium:noReset": "false",
+    "appium:automationName": "UIAutomator2",
+    "appium:bundleId": "com.saucelabs.mydemoapp.android",
+    "appium:platformVersion": "14.0",
+    "appium:platformName": "Android",
+    "path": "/wd/hub",
+    "port": 4723,
+    "hostname": "0.0.0.0"
+  }
+}
