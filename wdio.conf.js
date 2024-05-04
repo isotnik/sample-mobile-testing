@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { readJson } from "./helpers/utils/dataUtils.js";
 const conf = readJson(`./${process.env.app}_${process.env.platform}_caps.json`)
 import fs from 'fs'
@@ -350,8 +351,6 @@ export const config = {
   onComplete: async function (exitCode, config, capabilities, results) {
     // config and generate report using htlm-nice reporter assuming it's listed as ome of reporters in config
     const reportAggregator = new ReportAggregator(config.reporters.filter((reporter) => reporter[0] === 'html-nice')[0][1])
-    console.log('config object:', JSON.stringify(config))
-    console.log('capabilities object:', JSON.stringify(capabilities))
     await reportAggregator.createReport()
   }
   /**

@@ -53,7 +53,6 @@ class Cart {
                 const price = parseFloat((await (await cartItemElement.$(this.locator.cartItemPrice)).getText()).replace('$ ', ''))
                 const color = await (await cartItemElement.$(this.locator.cartItemColor)).getText()
                 const quantity = parseInt(await (await cartItemElement.$(this.locator.cartItemQuantity)).getText())
-                console.log(title, price, color, quantity)
                 cartItems.push(
                     {
                         title: title,
@@ -77,7 +76,6 @@ class Cart {
                         const price = parseFloat((await (await scrollDownUntilElementPresent(this.locator.cartItemPrice, cartItemElement)).getText()).replace('$ ', ''))
                         // const color = await (await cartItemElement.$(this.locator.cartItemColor)).getText() // todo: implement color parsing
                         const quantity = parseInt(await (await scrollDownUntilElementPresent(this.locator.cartItemQuantity, cartItemElement)).getText())
-                        console.log(title, price, quantity)
                         cartItems.push(
                             {
                                 title: title,

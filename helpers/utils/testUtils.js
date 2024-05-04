@@ -1,3 +1,4 @@
+import { debugLog } from "./logUtils.js";
 
 function compareObjectArrays(actual, expected) {
     const normalizeArray = (arr, reference) => {
@@ -22,8 +23,8 @@ function compareObjectArrays(actual, expected) {
     }
     const sortedActual = normalizedActual.sort(sortObjects)
     const sortedExpected = expected.sort(sortObjects)
-    console.log('sorted actual:', sortedActual)
-    console.log('sorted expected:', sortedExpected)
+    debugLog('sorted actual:', sortedActual)
+    debugLog('sorted expected:', sortedExpected)
     expect(sortedActual).toEqual(sortedExpected)
 
 }
