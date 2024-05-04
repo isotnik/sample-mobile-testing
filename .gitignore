@@ -5,6 +5,7 @@ out
 gen
 # Node moules
 node_modules
+package-lock.json
 # reports and logs
 allure-report
 allure-results
