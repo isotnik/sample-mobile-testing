@@ -1,0 +1,52 @@
+{
+  "name": "sample-mobile-testing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "appium": "appium --base-path /wd/hub",
+    "ios:saucelabs": "platform=ios app=saucelabs wdio run saucelabs.wdio.conf.js",
+    "android:saucelabs": "platform=android app=saucelabs wdio run saucelabs.wdio.conf.js",
+    "linter": "eslint -c .eslintrc . --ext .js"
+  },
+  "license": "GNU GPL V3",
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/eslint-parser": "^7.24.1",
+    "@babel/plugin-proposal-throw-expressions": "^7.24.1",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/register": "^7.23.7",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@wdio/allure-reporter": "^8.36.1",
+    "@wdio/appium-service": "^8.36.1",
+    "@wdio/browserstack-service": "^8.36.1",
+    "@wdio/cli": "^8.36.1",
+    "@wdio/junit-reporter": "^8.36.1",
+    "@wdio/local-runner": "^8.36.1",
+    "@wdio/mocha-framework": "^8.36.1",
+    "@wdio/spec-reporter": "^8.36.1",
+    "allure-commandline": "^2.29.0",
+    "appium": "^2.5.4",
+    "appium-uiautomator2-driver": "^3.1.0",
+    "appium-xcuitest-driver": "^7.14.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-wdio": "^8.24.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "wdio-html-nice-reporter": "^8.1.6",
+    "webdriverio": "^8.36.1"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isotnik/sample-mobile-testing"
+  },
+  "bugs": {
+    "url": "https://github.com/isotnik/sample-mobile-testing/issues"
+  },
+  "homepage": "https://github.com/isotnik/sample-mobile-testing#readme"
+}

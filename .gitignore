@@ -1,0 +1,16 @@
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+# Node moules
+node_modules
+# reports and logs
+allure-report
+allure-results
+logs
+reports
+# apps binaries
+apps
+# etc
+.DS_Store
