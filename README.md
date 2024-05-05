@@ -2,7 +2,7 @@
 This is demo project showing my current skill set in mobile test automation.
 Used WebdriverIO and Appium which allows to cover both Android and iOS platforms using the same set of tests.
 
-Currently, Saucelabs My Demo App is used as subject for automation, it allows to show main concepts and approaches. I don't work in Saucelabs company, this is just for demo purposes.
+Currently, **Saucelabs My Demo App** ([Android](https://github.com/saucelabs/my-demo-app-android) and [iOS](https://github.com/saucelabs/my-demo-app-ios)) is used as subject for automation, it allows to show main concepts and approaches. I don't work for Saucelabs company, this is just for demo purposes since this app is open sourced and has versions for Android and iOS.
 
 ## Usage
 1. Clone repo on you local machine
