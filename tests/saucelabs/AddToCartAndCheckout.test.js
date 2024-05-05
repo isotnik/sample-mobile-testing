@@ -12,6 +12,7 @@ import checkoutPage from '../../pageObjects/sauselabs/Checkout.js'
 import reviewOrderPage from '../../pageObjects/sauselabs/ReviewOrder.js'
 import checkoutCompletePage from '../../pageObjects/sauselabs/CheckoutComplete.js'
 import { compareObjectArrays } from "../../helpers/utils/testUtils.js"
+import {debugLog} from "../../helpers/utils/logUtils.js"
 
 describe ('Products E2E - happy path', async function () {
     let cartCount = 0
@@ -43,7 +44,7 @@ describe ('Products E2E - happy path', async function () {
         await expect (await cartPage.getTotalItemsNumber()).toBe(productsData.length)
         await expect (await cartPage.getTotalPrice()).toBe(cartTotalExpected)
         const currentCartItems = await cartPage.getAllCartItems()
-        console.log('Cart items: ' + JSON.stringify(currentCartItems))
+        debugLog('Cart items: ' + JSON.stringify(currentCartItems))
         compareObjectArrays(currentCartItems, productsData)
         await cartPage.proceedToCheckoutButton.click()
     })

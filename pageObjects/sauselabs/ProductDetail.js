@@ -1,6 +1,6 @@
 class ProductDetail {
     constructor () {
-        this.locator = {
+        this.locators = {
             productTitle: function (productTitle) {
                 return driver.isIOS ? `~${productTitle}` : 'id=com.saucelabs.mydemoapp.android:id/productTV'
             },
@@ -12,24 +12,24 @@ class ProductDetail {
     }
 
     productTitle = async function (productTitle) {
-        return await $(this.locator.productTitle(productTitle))
+        return await $(this.locators.productTitle(productTitle))
     }
 
     get addToCartButton () {
-        return $(this.locator.addToCartButton)
+        return $(this.locators.addToCartButton)
     }
 
     get productDescription  () {
-        return $(this.locator.productDescription)
+        return $(this.locators.productDescription)
     }
 
     get productPrice () {
-        return $(this.locator.productPrice)
+        return $(this.locators.productPrice)
     }
 
     goBack = async function () {
         if (driver.isIOS) {
-            await (await $(this.locator.backButton)).click()
+            await (await $(this.locators.backButton)).click()
         } else {
             driver.back()
         }

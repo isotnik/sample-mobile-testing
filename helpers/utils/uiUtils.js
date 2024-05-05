@@ -1,5 +1,8 @@
 import { debugLog } from "./logUtils.js";
 
+/**
+ * Performs swipe back gesture, may not work on iOS simulator
+ */
 async function swipeBack() {
     await driver.execute(
         driver.isIOS
@@ -18,23 +21,34 @@ async function swipeBack() {
     )
 }
 
+/**
+ * Performs scroll down until element by given locator can be found.
+ * This is very useful in case when you have scrollable list,
+ * but only elements currently shown in viewport are present in elements tree.
+ * @param {string} locator - element locator
+ * @param {WebdriverIO.Element} parentElement - parent element in case you need to look for specific element inside another element which is already present
+ * @param {int} scrollAttemptsLimit - set limit of scroll attempts, 5 by default
+ */
 async function scrollDownUntilElementPresent (locator, parentElement, scrollAttemptsLimit) {
     const scrollAttempts = (typeof scrollAttemptsLimit === 'number') ? scrollAttemptsLimit : 5 // limit scroll attempts to avoid endless cycle
     let element
     for (let i = 0; i < scrollAttempts; i++) {
         element = parentElement  ? await parentElement.$(locator) : await $(locator)
         if (element.error) {
-            debugLog('Element is not on screen, scrolling down')
+            debugLog(`scrollDownUntilElementPresent: Element with ${locator} locator is not on screen, scrolling down`)
             await scrollDown()
         }
         else {
-            debugLog(`element was found in ${i} scrolls`)
+            debugLog(`scrollDownUntilElementPresent: Element was found in ${i} scrolls`)
             return element
         }
     }
     return element
 }
 
+/**
+ * Performs scroll down using swipe gesture
+ */
 async function scrollDown () {
     const screenSize = await driver.getWindowSize()
     await driver.execute(
@@ -55,6 +69,9 @@ async function scrollDown () {
     )
 }
 
+/**
+ * Performs scroll up using swipe gesture
+ */
 async function scrollUp() {
     const screenSize = await driver.getWindowSize()
     await driver.execute(
@@ -75,7 +92,15 @@ async function scrollUp() {
     )
 }
 
-async function scrollDownUntilElementInViewport (element, viewportHeaderLocator, viewportFooterLocator, scrollAttemptsLimit)  {
+/**
+ * Performs scroll down or up until element is in viewport (between provided header and footer elements)
+ * This is very useful in case when you have scrollable list and element exists, but not all attributes are correct until it's in viewport
+ * @param {WebdriverIO.Element} element - element to be visible in viewport
+ * @param {string} viewportHeaderLocator - locator for top element, if null it means that viewport is not limited from top
+ * @param {string} viewportFooterLocator - locator for bottom element, if null it means that viewport is not limited from bottom with any element but keyboard
+ * @param {int} scrollAttemptsLimit - set limit of scroll attempts, 5 by default
+ */
+async function scrollUntilElementInViewport (element, viewportHeaderLocator, viewportFooterLocator, scrollAttemptsLimit)  {
     let viewportHeaderRect
     let viewportFooterRect
 
@@ -90,6 +115,7 @@ async function scrollDownUntilElementInViewport (element, viewportHeaderLocator,
         // assuming that keyboard is viewport bottom border
         if (driver.isKeyboardShown()) {
             if (driver.isIOS) {
+                // in some cases it's not possible to hide keyboard on iOS
                 viewportFooterRect = await driver.getElementRect(await $('//XCUIElementTypeKeyboard').elementId)
             }
             else {
@@ -105,18 +131,18 @@ async function scrollDownUntilElementInViewport (element, viewportHeaderLocator,
     const scrollAttempts = (typeof scrollAttemptsLimit === 'number') ? scrollAttemptsLimit : 5
     for (let i = 0; i < scrollAttempts; i++) {
         const elementRect = await driver.getElementRect(element.elementId)
-        debugLog('element id is:', element.elementId)
-        debugLog('element rect is:', elementRect)
-        debugLog('header rect is:', viewportHeaderRect)
-        debugLog('footer rect is:', viewportFooterRect)
+        debugLog('scrollUntilElementInViewport: element id is:', element.elementId)
+        debugLog('scrollUntilElementInViewport: element rect is:', elementRect)
+        debugLog('scrollUntilElementInViewport: header rect is:', viewportHeaderRect)
+        debugLog('scrollUntilElementInViewport: footer rect is:', viewportFooterRect)
         const needToScrollDown = (function () {
             return (elementRect.y + elementRect.height - viewportFooterRect.y) > 0
         })()
         const needToScrollUp = (function () {
             return elementRect.y < (viewportHeaderRect.y + viewportHeaderRect.height)
         })()
-        debugLog('Need to scroll down:', needToScrollDown)
-        debugLog('Need to scroll up:', needToScrollUp)
+        debugLog('scrollUntilElementInViewport: need to scroll down:', needToScrollDown)
+        debugLog('scrollUntilElementInViewport: need to scroll up:', needToScrollUp)
         if (needToScrollDown) {
             await scrollDown()
         } else if (needToScrollUp) {
@@ -127,13 +153,22 @@ async function scrollDownUntilElementInViewport (element, viewportHeaderLocator,
     }
 }
 
+/**
+ * Checks if element can be found on screen using given locator
+ * @param {string} locator - locator for element to find
+ * @returns {boolean}
+ */
 async function isElementPresent (locator) {
     const element = await $(locator)
     return !element.error
 }
 
-async function clickLeftSideOfElement(selector) {
-    const element = await $(selector);
+/**
+ * Performs tap of left side of element. Can be useful in case if only left part of element is actually clickable
+ * @param {string} locator - locator for element to tap
+ */
+async function clickLeftSideOfElement(locator) {
+    const element = await $(locator);
     // Get the size and location of the element
     const size = await element.getSize()
     debugLog('Element size:', JSON.stringify(size))
@@ -144,6 +179,9 @@ async function clickLeftSideOfElement(selector) {
     await driver.execute('mobile: tap', { x: x, y: y })
 }
 
+/**
+ * Performs tap of left down area of screen. Can be useful in cases if you need to click this specific area for some reason
+ */
 async function clickLeftDownScreenArea() {
     const screenSize = await driver.getWindowSize()
     debugLog('Screen size:', JSON.stringify(screenSize))
@@ -152,4 +190,4 @@ async function clickLeftDownScreenArea() {
     await driver.execute('mobile: tap', { x: x, y: y})
 }
 
-export  { swipeBack, scrollDown, scrollDownUntilElementPresent, scrollDownUntilElementInViewport, isElementPresent, clickLeftSideOfElement, clickLeftDownScreenArea }
+export  { swipeBack, scrollDown, scrollDownUntilElementPresent, scrollUntilElementInViewport, isElementPresent, clickLeftSideOfElement, clickLeftDownScreenArea }

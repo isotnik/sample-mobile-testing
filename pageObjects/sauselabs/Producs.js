@@ -2,7 +2,7 @@ import { scrollDownUntilElementPresent } from '../../helpers/utils/uiUtils.js'
 
 class Products {
     constructor () {
-        this.locator = {
+        this.locators = {
             productCard: function (productTitle) {
                 return driver.isIOS ? `//XCUIElementTypeStaticText[@name="${productTitle}"]/..`
                     : `//android.widget.ImageView[@content-desc="${productTitle}"]/..`
@@ -13,13 +13,13 @@ class Products {
     }
 
     productCard = async function (productTitle) {
-        this.currentCard = await scrollDownUntilElementPresent(this.locator.productCard(productTitle))
+        this.currentCard = await scrollDownUntilElementPresent(this.locators.productCard(productTitle))
         return this.currentCard
     }
 
     getTitle = async function () {
         if (this.currentCard) {
-            return await (await this.currentCard.$(this.locator.title)).getText()
+            return await (await this.currentCard.$(this.locators.title)).getText()
         }
         else {
             throw new Error('Current card element not defined, call productCard function first')
@@ -28,7 +28,7 @@ class Products {
 
     getPrice = async function () {
         if (this.currentCard) {
-            return parseFloat((await (await this.currentCard.$(this.locator.price)).getText()).replace('$ ', ''))
+            return parseFloat((await (await this.currentCard.$(this.locators.price)).getText()).replace('$ ', ''))
         } else {
             throw new Error('Current card element not defined, call productCard function first')
         }
