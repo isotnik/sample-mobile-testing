@@ -10,6 +10,6 @@ else
   echo "Found next emulators:"
   echo "${EMULATOR_NAME}"
   # Run first emulator from the list in case if deviceName wasn't already set
-  [[ -z $deviceName ]] && deviceName="${EMULATOR_NAME[0]}"
-  ./emulator -avd "${deviceName}" -no-snapshot -no-audio
+  [[ -z $DEVICE_NAME ]] && DEVICE_NAME="${EMULATOR_NAME[0]}"
+  ./emulator -avd "${DEVICE_NAME}" -no-snapshot -no-audio
 fi

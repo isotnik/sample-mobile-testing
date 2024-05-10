@@ -19,7 +19,7 @@ class Products {
 
     getTitle = async function () {
         if (this.currentCard) {
-            return await (await this.currentCard.$(this.locators.title)).getText()
+            return await (await scrollDownUntilElementPresent(this.locators.title, this.currentCard)).getText()
         }
         else {
             throw new Error('Current card element not defined, call productCard function first')

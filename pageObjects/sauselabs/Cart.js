@@ -1,9 +1,11 @@
 import {
+    elementViewportVerticalPosition,
     isElementPresent,
     scrollDown,
     scrollDownUntilElementPresent,
     scrollUntilElementInViewport
 } from '../../helpers/utils/uiUtils.js'
+import {debugLog} from "../../helpers/utils/logUtils.js";
 
 class Cart {
     constructor () {
@@ -11,7 +13,7 @@ class Cart {
             cartNavButton: driver.isIOS ? '~Cart-tab-item' : 'id=com.saucelabs.mydemoapp.android:id/cartIV',
             cartItemsNumber: driver.isIOS ? '//XCUIElementTypeImage[@name="GrayRoundView Icons"]/following-sibling::XCUIElementTypeStaticText' : 'id=com.saucelabs.mydemoapp.android:id/cartTV',
             cartItem: driver.isIOS ? '//XCUIElementTypeTable/XCUIElementTypeCell/XCUIElementTypeButton[@name="Remove Item"]/..'
-                : '//androidx.recyclerview.widget.RecyclerView[@content-desc="Displays list of selected products"]/android.view.ViewGroup',
+                : '//androidx.recyclerview.widget.RecyclerView[@resource-id="com.saucelabs.mydemoapp.android:id/productRV"]/android.view.ViewGroup',
             cartFooter: driver.isIOS ? '//XCUIElementTypeTable//XCUIElementTypeStaticText[contains(@name, "Sauce Labs. All Rights Reserved")]'
                 : '//android.widget.LinearLayout[@resource-id="com.saucelabs.mydemoapp.android:id/socialLL"]',
             cartItemTitle: driver.isIOS ? './/XCUIElementTypeButton[@name="AddPlus Icons"]/following-sibling::XCUIElementTypeStaticText[1]'
@@ -28,8 +30,8 @@ class Cart {
                 : '//android.widget.TextView[@resource-id="com.saucelabs.mydemoapp.android:id/totalPriceTV"]',
             proceedToCheckoutButton: driver.isIOS ? '//XCUIElementTypeButton[@name="ProceedToCheckout"]'
                 : '~Confirms products for checkout',
-            viewportHeader: driver.isIOS ? '~My Cart' : '',
-            viewportFooter: driver.isIOS ? '//XCUIElementTypeButton[@name="ProceedToCheckout"]/..' : ''
+            viewportHeader: driver.isIOS ? '~My Cart' : '//android.view.ViewGroup[@resource-id="com.saucelabs.mydemoapp.android:id/header"]',
+            viewportFooter: driver.isIOS ? '//XCUIElementTypeButton[@name="ProceedToCheckout"]/..' : '//android.widget.LinearLayout[@resource-id="com.saucelabs.mydemoapp.android:id/bottomLL"]'
         }
     }
 
@@ -77,14 +79,24 @@ class Cart {
                 await driver.waitUntil(async function () {
                     return await isElementPresent(cartElementLocator)
                 }, { timout: 2000 })
-                const cartItemsElements = await $$(this.locators.cartItem)
+                const cartItemsElements = await $$(cartElementLocator)
+                const cartItemsElementsIds = []
+                for (const element of cartItemsElements) {
+                    cartItemsElementsIds.push(element.elementId)
+                }
+                debugLog(`Cart elements for scroll number ${i}: ${JSON.stringify(cartItemsElementsIds)}`)
                 const cartFooterPresent = await isElementPresent(this.locators.cartFooter)
                 for (const cartItemElement of cartItemsElements) {
-                    if (!elementsIds.includes(cartItemElement.elementId)) {
+                    const currentElementPixelsToTop = (await elementViewportVerticalPosition(cartItemElement, this.locators.viewportHeader, this.locators.viewportFooter)).pixelsToTop
+                    debugLog(`Scroll number ${i}, element id: ${cartItemElement.elementId}, pixels to top: ${currentElementPixelsToTop}`)
+                    if (await currentElementPixelsToTop <= 0) {
+                        debugLog(`Skipping cart item element ${cartItemElement.elementId}, it was already seen`)
+                    } else {
                         const title = await (await scrollDownUntilElementPresent(this.locators.cartItemTitle, cartItemElement)).getText()
                         const price = parseFloat((await (await scrollDownUntilElementPresent(this.locators.cartItemPrice, cartItemElement)).getText()).replace('$ ', ''))
                         // const color = await (await cartItemElement.$(this.locators.cartItemColor)).getText() // todo: implement color parsing
                         const quantity = parseInt(await (await scrollDownUntilElementPresent(this.locators.cartItemQuantity, cartItemElement)).getText())
+                        debugLog('Current cart item:', title, price, quantity)
                         cartItems.push(
                             {
                                 title: title,
@@ -92,8 +104,8 @@ class Cart {
                                 quantity: quantity
                             }
                         )
-                        elementsIds.push(cartItemElement.elementId)
                     }
+
                 }
                 if (cartFooterPresent) {
                     break

@@ -7,6 +7,7 @@
     "appium": "appium --base-path /wd/hub",
     "ios:saucelabs": "platform=ios app=saucelabs wdio run saucelabs.wdio.conf.js",
     "android:saucelabs": "platform=android app=saucelabs wdio run saucelabs.wdio.conf.js",
+    "android:bs:saucelabs": "platform=android app=saucelabsbs wdio run saucelabs.bs.wdio.conf.js",
     "linter": "eslint -c .eslintrc . --ext .js"
   },
   "license": "GNU GPL V3",

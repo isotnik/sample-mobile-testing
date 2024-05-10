@@ -12,7 +12,8 @@ import checkoutPage from '../../pageObjects/sauselabs/Checkout.js'
 import reviewOrderPage from '../../pageObjects/sauselabs/ReviewOrder.js'
 import checkoutCompletePage from '../../pageObjects/sauselabs/CheckoutComplete.js'
 import { compareObjectArrays } from "../../helpers/utils/testUtils.js"
-import {debugLog} from "../../helpers/utils/logUtils.js"
+import { debugLog } from "../../helpers/utils/logUtils.js"
+import { scrollDownUntilElementPresent } from "../../helpers/utils/uiUtils.js";
 
 describe ('Products E2E - happy path', async function () {
     let cartCount = 0
@@ -80,7 +81,8 @@ describe ('Products E2E - happy path', async function () {
         await clickFirstField()
         await shippingAddressPage.countryInput.addValue(shippingAddressData.country)
         await clickFirstField()
-        await shippingAddressPage.toPaymentButton.click()
+        // on devices with small screen height button is not on screen
+        await (await scrollDownUntilElementPresent(shippingAddressPage.locators.toPaymentButton)).click()
         await expect(checkoutPage.cardNumberInput).toBePresent()
     })
 
