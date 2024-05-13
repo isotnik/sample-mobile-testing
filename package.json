@@ -8,6 +8,8 @@
     "ios:saucelabs": "platform=ios app=saucelabs wdio run saucelabs.wdio.conf.js",
     "android:saucelabs": "platform=android app=saucelabs wdio run saucelabs.wdio.conf.js",
     "android:bs:saucelabs": "platform=android app=saucelabsbs wdio run saucelabs.bs.wdio.conf.js",
+    "ios:nextcloud": "platform=ios app=nextcloud wdio run nextcloud.wdio.conf.js",
+    "android:nextcloud": "platform=android app=nextcloud wdio run nextcloud.wdio.conf.js",
     "linter": "eslint -c .eslintrc . --ext .js"
   },
   "license": "GNU GPL V3",
@@ -30,7 +32,7 @@
     "@wdio/spec-reporter": "^8.36.1",
     "allure-commandline": "^2.29.0",
     "appium": "^2.5.4",
-    "appium-uiautomator2-driver": "^3.1.0",
+    "appium-uiautomator2-driver": "^3.5.0",
     "appium-xcuitest-driver": "^7.14.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
