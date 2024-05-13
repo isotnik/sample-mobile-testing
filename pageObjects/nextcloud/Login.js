@@ -1,3 +1,5 @@
+import {debugLog} from "../../helpers/utils/logUtils.js";
+
 class Login {
     constructor() {
         this.locators = {
@@ -60,12 +62,20 @@ class Login {
         return $(this.locators.alternateLoginTokenInput)
     }
 
+    /**
+     * Waits until loading spinner is shown and hidden.
+     * Implemented only for iOS to avoid situations when element cannot receive click because of spinner on top of it.
+     */
     async waitForLoadingSpinner() {
         if (driver.isIOS) {
             const activityIndicator = '//XCUIElementTypeActivityIndicator'
-            await driver.waitUntil(async function () {
-                return await (await $(activityIndicator)).isDisplayed()
-            })
+            try {
+                await driver.waitUntil(async function () {
+                    return await (await $(activityIndicator)).isDisplayed()
+                }, {timeout: 2000})
+            } catch (error) {
+                debugLog('waitForLoadingSpinner: loading spinner wasn\'t shown at all')
+            }
             await driver.waitUntil(async function () {
                 return !(await (await $(activityIndicator)).isDisplayed())
             })
