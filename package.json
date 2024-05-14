@@ -10,6 +10,7 @@
     "android:bs:saucelabs": "platform=android app=saucelabsbs wdio run saucelabs.bs.wdio.conf.js",
     "ios:nextcloud": "platform=ios app=nextcloud wdio run nextcloud.wdio.conf.js",
     "android:nextcloud": "platform=android app=nextcloud wdio run nextcloud.wdio.conf.js",
+    "android:bs:nextcloud": "platform=android app=nextcloudbs wdio run nextcloud.bs.wdio.conf.js",
     "linter": "eslint -c .eslintrc . --ext .js"
   },
   "license": "GNU GPL V3",

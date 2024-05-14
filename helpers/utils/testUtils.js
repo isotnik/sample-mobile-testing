@@ -29,4 +29,8 @@ function compareObjectArrays(actual, expected) {
     expect(sortedActual).toEqual(sortedExpected)
 }
 
-export { compareObjectArrays }
+function isCurrentServiceBrowserStack() {
+    return driver.options.services[0][0] === 'browserstack'
+}
+
+export { compareObjectArrays, isCurrentServiceBrowserStack }

@@ -2,13 +2,15 @@ import welcomePage from '../../pageObjects/nextcloud/Welcome.js'
 import loginPage from '../../pageObjects/nextcloud/Login.js'
 import mainPage from '../../pageObjects/nextcloud/Main.js'
 import { permissionDeny, waitForPermissionDialog } from "../../helpers/utils/systemDialogs.js"
+import {scrollDownUntilElementPresent} from "../../helpers/utils/uiUtils.js"
+import {isCurrentServiceBrowserStack} from "../../helpers/utils/testUtils.js"
 
 describe('Nextcloud app demo test', function () {
     const packageId =  driver.options.capabilities["appium:bundleId"]
     const appPath = driver.options.capabilities["appium:app"]
 
     before(async function () {
-        if (driver.isAndroid) { // reinstall app manually since sometimes apps data wasn't cleared
+        if (driver.isAndroid && !isCurrentServiceBrowserStack()) { // reinstall app manually since sometimes apps data wasn't cleared
             await driver.removeApp(packageId)
             await driver.installApp(appPath)
             await driver.activateApp(packageId)
@@ -30,15 +32,17 @@ describe('Nextcloud app demo test', function () {
         await loginPage.serverAddressInput.setValue(process.env.NC_HOST)
         await loginPage.confirmButton.click()
         await loginPage.waitForLoadingSpinner()
+        await scrollDownUntilElementPresent(loginPage.locators.alternateLoginButton)
         await expect(loginPage.alternateLoginButton).toBePresent()
         await loginPage.alternateLoginButton.click()
+        await scrollDownUntilElementPresent(loginPage.locators.grantAccessButton)
         await expect(loginPage.alternateLoginUsernameInput).toBePresent()
         await (await loginPage.alternateLoginUsernameInput).setValue(process.env.NC_USERNAME)
         await (await loginPage.alternateLoginTokenInput).setValue(process.env.NC_TOKEN)
         await expect(loginPage.grantAccessButton).toBePresent()
         await loginPage.grantAccessButton.click()
         await loginPage.waitForLoadingSpinner()
-        // on Android login process might be executed on chrome browser
+        // on Android login process might be executed on Chrome browser
         if (driver.isAndroid && (await driver.getCurrentPackage()).includes('chrome')) {
             await expect (loginPage.accountConnectedText).toBePresent()
             await driver.background(null)

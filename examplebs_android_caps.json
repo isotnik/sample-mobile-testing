@@ -1,0 +1,13 @@
+{
+  "capabilities": {
+    "bstack:options": {
+      "deviceName": "Google Pixel 8",
+      "platformVersion": "14.0",
+      "platformName": "Android"
+    },
+    "appium:noReset": "false",
+    "appium:automationName": "UIAutomator2",
+    "appium:appName": "Nextcloud",
+    "appium:bundleId": "com.nextcloud.client"
+  }
+}

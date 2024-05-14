@@ -1,5 +1,6 @@
-import { debugLog } from "./logUtils.js";
-import fs from "fs";
+import { debugLog } from "./logUtils.js"
+import fs from "fs"
+import {isCurrentServiceBrowserStack} from "./testUtils.js"
 
 /**
  * Performs swipe back gesture, may not work on iOS simulator
@@ -66,7 +67,6 @@ async function scrollDownUntilElementPresent (locator, parentElement, scrollAtte
  * Performs scroll down using swipe gesture
  */
 async function scrollDown () {
-    debugLog('first service:', driver.options.services[0][0])
     if (driver.options.services[0][0] === 'appium') {
         const screenSize = await driver.getWindowSize()
         await driver.execute(
@@ -85,7 +85,7 @@ async function scrollDown () {
                     speed: 900
                 }
         )
-    } else if (driver.options.services[0][0] === 'browserstack') { // browserstack doesn't support mobile: swipeGesture
+    } else if (isCurrentServiceBrowserStack()) { // browserstack doesn't support mobile: swipeGesture
         const { width, height } = await driver.getWindowRect()
         const start_y = Math.floor(height * 0.7)
         const end_y = Math.floor(height * 0.3)

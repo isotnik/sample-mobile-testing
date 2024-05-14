@@ -1,4 +1,5 @@
 import {debugLog} from "../../helpers/utils/logUtils.js";
+import {isCurrentServiceBrowserStack} from "../../helpers/utils/testUtils.js"
 
 class Login {
     constructor() {
@@ -12,9 +13,12 @@ class Login {
             grantAccessButton: driver.isIOS ? '//XCUIElementTypeButton[@name="Grant access"]' : '//android.widget.Button[@text="Grant access"]',
             loadingSpinner: driver.isIOS ? '//XCUIElementTypeActivityIndicator': '//android.view.View[@resource-id="submit-wrapper"]/android.widget.Button',
             accountConnectedText: driver.isIOS ? '' : '//android.widget.TextView[@text="Account connected"]',
-            alternateLoginButton: driver.isIOS ? '//XCUIElementTypeLink[@name="Alternative log in using app token"]' : '//android.widget.TextView[@text="Alternative log in using app token"]',
-            alternateLoginUsernameInput: driver.isIOS ? '//XCUIElementTypeTextField[@name="Username"]' : '//android.widget.Button[@text="Grant access"]/preceding-sibling::android.view.View/preceding-sibling::android.view.View/android.widget.EditText',
-            alternateLoginTokenInput: driver.isIOS ? '//XCUIElementTypeSecureTextField[@name="Password"]' : '//android.widget.Button[@text="Grant access"]/preceding-sibling::android.view.View[2]/android.widget.EditText'
+            alternateLoginButton: driver.isIOS ? '//XCUIElementTypeLink[@name="Alternative log in using app token"]'
+                : '//android.widget.TextView[@text="Alternative log in using app token"]',
+            alternateLoginUsernameInput: driver.isIOS ? '//XCUIElementTypeTextField[@name="Username"]'
+                : isCurrentServiceBrowserStack() ? '//android.widget.EditText[@resource-id="user"]' : '//android.widget.Button[@text="Grant access"]/preceding-sibling::android.view.View/preceding-sibling::android.view.View/android.widget.EditText',
+            alternateLoginTokenInput: driver.isIOS ? '//XCUIElementTypeSecureTextField[@name="Password"]'
+                : isCurrentServiceBrowserStack() ? '//android.widget.EditText[@resource-id="password"]' :'//android.widget.Button[@text="Grant access"]/preceding-sibling::android.view.View[2]/android.widget.EditText'
         }
     }
 
