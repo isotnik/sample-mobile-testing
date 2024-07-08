@@ -33,4 +33,12 @@ function isCurrentServiceBrowserStack() {
     return driver.options.services[0][0] === 'browserstack'
 }
 
-export { compareObjectArrays, isCurrentServiceBrowserStack }
+async function reinstallApp () {
+    const packageId =  driver.options.capabilities["appium:bundleId"]
+    const appPath = driver.options.capabilities["appium:app"]
+    await driver.removeApp(packageId)
+    await driver.installApp(appPath)
+    await driver.activateApp(packageId)
+}
+
+export { compareObjectArrays, isCurrentServiceBrowserStack, reinstallApp }

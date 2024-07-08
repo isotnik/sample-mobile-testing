@@ -1,10 +1,10 @@
-import {debugLog} from "./logUtils.js";
+import { debugLog } from "./logUtils.js";
 
 /**
  * Denies a permission request on a mobile device. This function handles different logic based on the device's OS:
  * - For iOS, it dismisses the alert that is presumably a permission request dialog.
  * - For Android, it waits for the permission dialog to be displayed, and then clicks the 'Deny' button.
- * This function assumes that the permission dialog is already prompted on the device screen.
+ * This function assumes that the permission dialog is already prompted or will be prompted shortly (3 secs)
  * @returns {Promise<void>} A promise that resolves after the permission has been denied or the alert has been dismissed                          depending on the device OS. The promise resolves immediately on iOS, as `dismissAlert` does not return a promise.
  */
 async function permissionDeny() {

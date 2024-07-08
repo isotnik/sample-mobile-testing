@@ -12,7 +12,7 @@ class Login {
             loginButton: driver.isIOS ? '~Log in' : '//android.widget.Button[@text="Log in"]',
             grantAccessButton: driver.isIOS ? '//XCUIElementTypeButton[@name="Grant access"]' : '//android.widget.Button[@text="Grant access"]',
             loadingSpinner: driver.isIOS ? '//XCUIElementTypeActivityIndicator': '//android.view.View[@resource-id="submit-wrapper"]/android.widget.Button',
-            accountConnectedText: driver.isIOS ? '' : '//android.widget.TextView[@text="Account connected"]',
+            accountConnectedText: driver.isIOS ? '//XCUIElementTypeStaticText[@name="Account connected"]' : '//android.widget.TextView[@text="Account connected"]',
             alternateLoginButton: driver.isIOS ? '//XCUIElementTypeLink[@name="Alternative log in using app token"]'
                 : '//android.widget.TextView[@text="Alternative log in using app token"]',
             alternateLoginUsernameInput: driver.isIOS ? '//XCUIElementTypeTextField[@name="Username"]'

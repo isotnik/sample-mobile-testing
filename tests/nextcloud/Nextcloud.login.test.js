@@ -1,19 +1,17 @@
 import welcomePage from '../../pageObjects/nextcloud/Welcome.js'
 import loginPage from '../../pageObjects/nextcloud/Login.js'
-import mainPage from '../../pageObjects/nextcloud/Main.js'
-import { permissionDeny, waitForPermissionDialog } from "../../helpers/utils/systemDialogs.js"
-import {scrollDownUntilElementPresent} from "../../helpers/utils/uiUtils.js"
-import {isCurrentServiceBrowserStack} from "../../helpers/utils/testUtils.js"
+import filesPage from '../../pageObjects/nextcloud/Files.js'
+import { permissionDeny, waitForPermissionDialog } from '../../helpers/utils/systemDialogs.js'
+import { scrollDownUntilElementPresent } from '../../helpers/utils/uiUtils.js'
+import {isCurrentServiceBrowserStack, reinstallApp} from '../../helpers/utils/testUtils.js'
 
 describe('Nextcloud app demo test', function () {
     const packageId =  driver.options.capabilities["appium:bundleId"]
-    const appPath = driver.options.capabilities["appium:app"]
 
     before(async function () {
-        if (driver.isAndroid && !isCurrentServiceBrowserStack()) { // reinstall app manually since sometimes apps data wasn't cleared
-            await driver.removeApp(packageId)
-            await driver.installApp(appPath)
-            await driver.activateApp(packageId)
+        // reinstall app manually since sometimes apps data isn't cleared on Android
+        if (driver.isAndroid && !isCurrentServiceBrowserStack()) {
+            await reinstallApp()
         }
     })
 
@@ -46,16 +44,16 @@ describe('Nextcloud app demo test', function () {
         if (driver.isAndroid && (await driver.getCurrentPackage()).includes('chrome')) {
             await expect (loginPage.accountConnectedText).toBePresent()
             await driver.background(null)
-            driver.pause(1500) // inserting delay to avoid strange behaviour
+            await driver.pause(1500) // inserting delay to avoid strange behaviour
             await driver.activateApp(packageId)
         }
         if (driver.isAndroid) {
             // wait until app is really authenticated and notification permission dialog is shown
             await waitForPermissionDialog(10000)
             await permissionDeny()
-            await expect(mainPage.storagePermissionsPopupText).toBePresent()
-            await mainPage.storagePermissionsCancelButton.click()
+            await expect(filesPage.storagePermissionsPopupText).toBePresent()
+            await filesPage.storagePermissionsCancelButton.click()
         }
-        await expect(mainPage.uploadButton).toBePresent()
+        await expect(filesPage.uploadButton).toBePresent()
     })
 })
