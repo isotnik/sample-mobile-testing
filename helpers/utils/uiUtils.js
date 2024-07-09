@@ -28,8 +28,8 @@ async function swipeBack() {
  * This is very useful in case when you have scrollable list,
  * but only elements currently shown in viewport are present in elements tree.
  * @param {string} locator - element locator
- * @param {WebdriverIO.Element} parentElement - parent element in case you need to look for specific element inside another element which is already present
- * @param {int} scrollAttemptsLimit - set limit of scroll attempts, 5 by default
+ * @param {WebdriverIO.Element} [parentElement] - parent element in case you need to look for specific element inside another element which is already present
+ * @param {number} [scrollAttemptsLimit] - set limit of scroll attempts, 5 by default
  */
 async function scrollDownUntilElementPresent (locator, parentElement, scrollAttemptsLimit) {
     const scrollAttempts = (typeof scrollAttemptsLimit === 'number') ? scrollAttemptsLimit : 5 // limit scroll attempts to avoid endless cycle
@@ -67,6 +67,7 @@ async function scrollDownUntilElementPresent (locator, parentElement, scrollAtte
  * Performs scroll down using swipe gesture
  */
 async function scrollDown () {
+    // @ts-expect-error assume services is always present in config
     if (driver.options.services[0][0] === 'appium') {
         const screenSize = await driver.getWindowSize()
         await driver.execute(
@@ -140,8 +141,8 @@ async function elementViewportVerticalPosition (element, viewportHeaderLocator, 
     const screenSize = await driver.getWindowSize()
     if (driver.isAndroid) {
         const bars = await driver.getSystemBars()
-        statusBarHeight = bars.statusBar.height
-        navBarHeight = bars.navigationBar.height
+        statusBarHeight = bars["statusBar"].height
+        navBarHeight = bars["navigationBar"].height
     } else {
         // assume status and navigation bars on iOS
         statusBarHeight = 65
@@ -272,7 +273,7 @@ async function scrollUntilElementInViewport1 (element, viewportHeaderLocator, vi
 /**
  * Checks if element can be found on screen using given locator
  * @param {string} locator - locator for element to find
- * @returns {boolean}
+ * @returns {Promise<boolean>}
  */
 async function isElementPresent (locator) {
     const element = await $(locator)
