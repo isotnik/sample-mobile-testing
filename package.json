@@ -35,7 +35,7 @@
     "@wdio/spec-reporter": "^8.36.1",
     "@wdio/types": "^8.36.1",
     "allure-commandline": "^2.29.0",
-    "appium": "^2.5.4",
+    "appium": "^2.11.2",
     "appium-uiautomator2-driver": "^3.5.0",
     "appium-xcuitest-driver": "^7.14.0",
     "dotenv": "^16.4.5",

@@ -5,7 +5,7 @@ import { permissionDeny, waitForPermissionDialog } from '../../helpers/utils/sys
 import { scrollDownUntilElementPresent } from '../../helpers/utils/uiUtils.js'
 import {isCurrentServiceBrowserStack, reinstallApp} from '../../helpers/utils/testUtils.js'
 
-describe('Nextcloud app demo test', function () {
+describe('Nextcloud: login', function () {
     const packageId =  driver.options.capabilities["appium:bundleId"]
 
     before(async function () {

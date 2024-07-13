@@ -30,7 +30,7 @@ function compareObjectArrays(actual, expected) {
 }
 
 function isCurrentServiceBrowserStack() {
-    return driver.options.services[0][0] === 'browserstack'
+    return driver.options["services"][0][0] === 'browserstack'
 }
 
 async function reinstallApp () {

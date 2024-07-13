@@ -57,8 +57,9 @@ async function scrollDownUntilElementPresent (locator, parentElement, scrollAtte
     }
     if (element.error) {
         const xmlSource =  await driver.getPageSource()
-        fs.writeFileSync(`./debug/${new Date().getTime()}_source_error.xml`, xmlSource)
-        throw new Error(`Wasn't able to scroll to element with ${locator} in ${scrollAttempts} scrolls`)
+        const outputFile = `./debug/${new Date().getTime()}_source_error.xml`
+        fs.writeFileSync(outputFile, xmlSource)
+        throw new Error(`Wasn't able to scroll to element with ${locator} in ${scrollAttempts} scrolls. Check xml page source here ${outputFile}`)
     }
     return element
 }
@@ -67,8 +68,7 @@ async function scrollDownUntilElementPresent (locator, parentElement, scrollAtte
  * Performs scroll down using swipe gesture
  */
 async function scrollDown () {
-    // @ts-expect-error assume services is always present in config
-    if (driver.options.services[0][0] === 'appium') {
+    if (driver.options['services'][0][0] === 'appium') {
         const screenSize = await driver.getWindowSize()
         await driver.execute(
             driver.isIOS
@@ -158,7 +158,7 @@ async function elementViewportVerticalPosition (element, viewportHeaderLocator, 
         viewportFooterRect = await driver.getElementRect((await $(viewportFooterLocator)).elementId)
     } else {
         // assume there is no footer
-        if (driver.isKeyboardShown()) {
+        if (await driver.isKeyboardShown()) {
             if (driver.isIOS) {
                 // assume that keyboard is a footer
                 viewportFooterRect = await driver.getElementRect(await $('//XCUIElementTypeKeyboard').elementId)
@@ -170,14 +170,14 @@ async function elementViewportVerticalPosition (element, viewportHeaderLocator, 
         }
 
     }
-    debugLog('viewport header:', viewportHeaderRect)
-    debugLog('viewport footer:', viewportFooterRect)
+    debugLog('elementViewportVerticalPosition: viewport header:', viewportHeaderRect)
+    debugLog('elementViewportVerticalPosition: viewport footer:', viewportFooterRect)
     const viewportTop = viewportHeaderRect.y + viewportHeaderRect.height
     const viewportBottom = viewportFooterRect.y
-    debugLog('viewport top:', viewportTop)
-    debugLog('viewport bottom:', viewportBottom)
+    debugLog('elementViewportVerticalPosition: viewport top:', viewportTop)
+    debugLog('elementViewportVerticalPosition: viewport bottom:', viewportBottom)
     const elementRect = await driver.getElementRect(element.elementId)
-    debugLog('element rect:', elementRect)
+    debugLog('elementViewportVerticalPosition: element rect:', elementRect)
     const pixelsToTop = elementRect.y - viewportTop
     const pixelsToBottom = viewportBottom - (elementRect.y + elementRect.height)
     return {
@@ -192,7 +192,7 @@ async function elementViewportVerticalPosition (element, viewportHeaderLocator, 
  * @param {WebdriverIO.Element} element - element to be visible in viewport
  * @param {string} viewportHeaderLocator - locator for top element, if null it means that viewport is not limited from top
  * @param {string} viewportFooterLocator - locator for bottom element, if null it means that viewport is not limited from bottom with any element but keyboard
- * @param {int} scrollAttemptsLimit - set limit of scroll attempts, 5 by default
+ * @param {number} scrollAttemptsLimit - set limit of scroll attempts, 5 by default
  */
 async function scrollUntilElementInViewport (element, viewportHeaderLocator, viewportFooterLocator, scrollAttemptsLimit = 5){
 
@@ -206,66 +206,11 @@ async function scrollUntilElementInViewport (element, viewportHeaderLocator, vie
     for (let i = 0; i < scrollAttemptsLimit; i++) {
         const verticalPosition = await elementViewportVerticalPosition(element, viewportHeaderLocator, viewportFooterLocator)
         if (verticalPosition.pixelsToBottom <= 0) {
-            debugLog(`${element.elementId} is not fully on screen, scrolling down`)
+            debugLog('scrollUntilElementInViewport:', `${element.elementId} is not fully on screen, scrolling down`)
             await scrollDown()
         } else if (verticalPosition.pixelsToTop <= 0) {
-            debugLog(`${element.elementId} is not fully on screen, scrolling up`)
+            debugLog('scrollUntilElementInViewport:', `${element.elementId} is not fully on screen, scrolling up`)
             await scrollUp()
-        }
-    }
-}
-
-
-
-async function scrollUntilElementInViewport1 (element, viewportHeaderLocator, viewportFooterLocator, scrollAttemptsLimit)  {
-    let viewportHeaderRect
-    let viewportFooterRect
-
-    if (!viewportHeaderLocator) {
-        // assuming there is no header
-        viewportHeaderRect = { x: 0, y:0, width: 0, height: 0 }
-    } else {
-        viewportHeaderRect = await driver.getElementRect(await $(viewportHeaderLocator).elementId)
-    }
-
-    if (!viewportFooterLocator) {
-        // assuming that keyboard is viewport bottom border
-        if (driver.isKeyboardShown()) {
-            if (driver.isIOS) {
-                // in some cases it's not possible to hide keyboard on iOS
-                viewportFooterRect = await driver.getElementRect(await $('//XCUIElementTypeKeyboard').elementId)
-            }
-            else {
-                // hide keyboard and assume there is no footer
-                await driver.hideKeyboard()
-                viewportFooterRect = { x: 0, y:0, width: 0, height: 0 }
-            }
-        }
-    } else {
-        viewportFooterRect = await driver.getElementRect(await $(viewportFooterLocator).elementId)
-    }
-
-    const scrollAttempts = (typeof scrollAttemptsLimit === 'number') ? scrollAttemptsLimit : 5
-    for (let i = 0; i < scrollAttempts; i++) {
-        const elementRect = await driver.getElementRect(element.elementId)
-        debugLog('scrollUntilElementInViewport: element id is:', element.elementId)
-        debugLog('scrollUntilElementInViewport: element rect is:', elementRect)
-        debugLog('scrollUntilElementInViewport: header rect is:', viewportHeaderRect)
-        debugLog('scrollUntilElementInViewport: footer rect is:', viewportFooterRect)
-        const needToScrollDown = (function () {
-            return (elementRect.y + elementRect.height - viewportFooterRect.y) > 0
-        })()
-        const needToScrollUp = (function () {
-            return elementRect.y < (viewportHeaderRect.y + viewportHeaderRect.height)
-        })()
-        debugLog('scrollUntilElementInViewport: need to scroll down:', needToScrollDown)
-        debugLog('scrollUntilElementInViewport: need to scroll up:', needToScrollUp)
-        if (needToScrollDown) {
-            await scrollDown()
-        } else if (needToScrollUp) {
-            await scrollUp()
-        } else {
-            break
         }
     }
 }
@@ -288,9 +233,9 @@ async function clickLeftSideOfElement(locator) {
     const element = await $(locator);
     // Get the size and location of the element
     const size = await element.getSize()
-    debugLog('Element size:', JSON.stringify(size))
+    debugLog('clickLeftSideOfElement: Element size:', JSON.stringify(size))
     const location = await element.getLocation()
-    debugLog('Element location:', JSON.stringify(location))
+    debugLog('clickLeftSideOfElement: Element location:', JSON.stringify(location))
     const x = location.x + size.width * 0.1
     const y = location.y + size.height / 2
     await driver.execute('mobile: tap', { x: x, y: y })
