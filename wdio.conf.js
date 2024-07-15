@@ -295,6 +295,9 @@ export const config = {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true })
       }
+      const xmlSource =  await driver.getPageSource()
+      const outputFile = `${dir}/${testName}_source_error.xml`
+      fs.writeFileSync(outputFile, xmlSource)
       await driver.saveScreenshot(
         `${dir}/${testName}.png`
       )
