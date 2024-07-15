@@ -33,6 +33,11 @@ function isCurrentServiceBrowserStack() {
     return driver.options["services"][0][0] === 'browserstack'
 }
 
+function currentDeviceName() {
+   return isCurrentServiceBrowserStack() ? driver.options.capabilities["bstack:options"]["deviceName"]
+       : driver.options.capabilities["appium:deviceName"]
+}
+
 async function reinstallApp () {
     const packageId =  driver.options.capabilities["appium:bundleId"]
     const appPath = driver.options.capabilities["appium:app"]
@@ -41,4 +46,4 @@ async function reinstallApp () {
     await driver.activateApp(packageId)
 }
 
-export { compareObjectArrays, isCurrentServiceBrowserStack, reinstallApp }
+export { compareObjectArrays, isCurrentServiceBrowserStack, reinstallApp, currentDeviceName }

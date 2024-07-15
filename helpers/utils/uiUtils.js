@@ -1,6 +1,5 @@
 import { debugLog } from "./logUtils.js"
-import fs from "fs"
-import {isCurrentServiceBrowserStack} from "./testUtils.js"
+import { isCurrentServiceBrowserStack } from "./testUtils.js"
 
 /**
  * Performs swipe back gesture, may not work on iOS simulator
@@ -56,10 +55,7 @@ async function scrollDownUntilElementPresent (locator, parentElement, scrollAtte
         }
     }
     if (element.error) {
-        const xmlSource =  await driver.getPageSource()
-        const outputFile = `./debug/${new Date().getTime()}_source_error.xml`
-        fs.writeFileSync(outputFile, xmlSource)
-        throw new Error(`Wasn't able to scroll to element with ${locator} in ${scrollAttempts} scrolls. Check xml page source here ${outputFile}`)
+        throw new Error(`Wasn't able to scroll to element with ${locator} in ${scrollAttempts} scrolls.`)
     }
     return element
 }

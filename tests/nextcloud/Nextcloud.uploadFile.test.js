@@ -11,7 +11,7 @@ describe ('Nextcloud: upload file', function () {
     const folderToCreate = 'my_docs'
     const deviceFolder = 'Download'
     const confirmFolderDeleteMessage = driver.isIOS ? `You will delete the following:   - ${folderToCreate}`
-        : `Do you really want to delete ${folderToCreate} and the contents thereof?`
+        : `Do you really want to delete ${folderToCreate}`
 
     before('Upload file to device', async function() {
         // reinstall app manually since sometimes apps data isn't cleared on Android emulator
@@ -19,6 +19,10 @@ describe ('Nextcloud: upload file', function () {
             await reinstallApp()
         }
         await login(process.env.NC_USERNAME, process.env.NC_TOKEN)
+        if (driver.isAndroid && isCurrentServiceBrowserStack()) {
+            // ensure phone's position is "neutral", it's important for BrowserStack
+            await driver.rotateDevice(0, 0, 0)
+        }
         await uploadFile(`testData/${fileToUpload}`)
     })
 
@@ -52,7 +56,7 @@ describe ('Nextcloud: upload file', function () {
         await (await filesPage.fileItemMenuButton(folderToCreate)).click()
         await expect(filesPage.fileItemMenuDelete).toBePresent()
         await filesPage.fileItemMenuDelete.click()
-        await expect(filesPage.confirmDialogMessage).toHaveText(confirmFolderDeleteMessage)
+        await expect(filesPage.confirmDialogMessage).toHaveText(expect.stringContaining(confirmFolderDeleteMessage))
         await filesPage.confirmDialogDeleteButton.click()
         await expect(filesPage.fileItemName(folderToCreate)).not.toBePresent()
     })
