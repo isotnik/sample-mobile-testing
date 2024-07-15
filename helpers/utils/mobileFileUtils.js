@@ -21,7 +21,7 @@ async function uploadFile (filePath) {
         filePath = path.resolve(filePath)
     }
     const fileName = path.basename(filePath)
-    const destination = driver.isIOS ? `@${packageId}:data/Documents/${fileName}` : `/sdcard/download/${fileName}`
+    const destination = driver.isIOS ? `@${packageId}:data/Documents/${fileName}` : `/sdcard/Download/${fileName}`
     await driver.pushFile(
         destination,
         fs.readFileSync(filePath).toString('base64'))
