@@ -226,7 +226,7 @@ async function isElementPresent (locator) {
  * @param {string} locator - locator for element to tap
  */
 async function clickLeftSideOfElement(locator) {
-    const element = await $(locator);
+    const element = await $(locator)
     // Get the size and location of the element
     const size = await element.getSize()
     debugLog('clickLeftSideOfElement: Element size:', JSON.stringify(size))

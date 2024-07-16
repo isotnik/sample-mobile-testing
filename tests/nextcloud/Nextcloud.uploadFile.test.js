@@ -4,11 +4,11 @@ import androidFileBrowser from '../../pageObjects/nextcloud/AndroidFileBrowser.j
 import iosFileBrowser from '../../pageObjects/system/IosFileBrowser.js'
 import { isCurrentServiceBrowserStack, reinstallApp } from '../../helpers/utils/testUtils.js'
 import { login } from '../../helpers/appActions/nexcloud.js'
-import { uploadFile } from "../../helpers/utils/mobileFileUtils.js"
-import { deleteFile, getFile } from "../../helpers/utils/nextcloudAPI.js"
-import { calculateChecksum } from "../../helpers/utils/dataUtils.js"
-import { debugLog } from "../../helpers/utils/logUtils.js"
-import { testData } from "../../testData/nextcloud/uploadFile.js"
+import { uploadFile } from '../../helpers/utils/mobileFileUtils.js'
+import { deleteFile, getFile } from '../../helpers/utils/nextcloudAPI.js'
+import { calculateChecksum } from '../../helpers/utils/dataUtils.js'
+import { debugLog } from '../../helpers/utils/logUtils.js'
+import { testData } from '../../testData/nextcloud/uploadFile.js'
 
 describe ('Nextcloud: upload file', function () {
     const { appName, fileToUpload, folderToCreate, deviceFolder, confirmFolderDeleteMessage } = testData
