@@ -2,7 +2,7 @@ import path from "path"
 import fs from "fs"
 
 /**
- * Uploads a file to a mobile device (Android or iOS). For iOS uploads inside current app folder, for Android - just into Download folder.
+ * Uploads a file to a mobile device (Android or iOS). For iOS uploads inside current app folder (app need has to be configured properly to store files), for Android - just into Download folder.
  *
  * @param {string} filePath - The path to the file to be uploaded. If the path is relative, it will be resolved to an absolute path.
  * @throws Will throw an error if the file upload fails.
